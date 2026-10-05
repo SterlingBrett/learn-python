@@ -2,8 +2,8 @@
 
 import sys
 
-if sys.version_info < (3, 8):
-    sys.exit('The Learn Python course needs Python 3.8 or newer.')
+if sys.version_info < (3, 10):
+    sys.exit('The Learn Python course needs Python 3.10 or newer.')
 
 try:
     import tkinter  # noqa: F401  pylint: disable=unused-import
