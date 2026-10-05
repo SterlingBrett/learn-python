@@ -36,6 +36,7 @@ class Section:
     setup: str = ''
     wrap: bool = True
     checks: int = 0
+    fixtures: tuple = ()
 
 
 @dataclass
@@ -180,6 +181,7 @@ def load_lesson(path, root, title=None, summary=''):
             code=code,
             setup=setup,
             checks=count_checks(code),
+            fixtures=tuple(arg.arg for arg in node.args.args),
         ))
     return lesson
 
@@ -270,7 +272,7 @@ def string_continuation_lines(source):
     """Line numbers that continue a multi-line string (their text is data, not code)."""
     protected = set()
     string_types = {tokenize.STRING}
-    for name in ('FSTRING_MIDDLE', 'FSTRING_END'):
+    for name in ('FSTRING_MIDDLE', 'FSTRING_END', 'TSTRING_MIDDLE', 'TSTRING_END'):
         if hasattr(tokenize, name):
             string_types.add(getattr(tokenize, name))
     try:

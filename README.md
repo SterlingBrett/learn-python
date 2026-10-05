@@ -36,7 +36,7 @@ the topics in a sidebar, explains each idea, and lets you edit and run the code.
 lines are checks: press **Run** and the app tells you whether they all pass, highlighting the
 line of any check that fails. Your progress and edits are saved automatically.
 
-Start it from the project root folder (Python 3.8 or newer with Tkinter, no other packages
+Start it from the project root folder (Python 3.10 or newer with Tkinter, no other packages
 needed):
 
 ```bash

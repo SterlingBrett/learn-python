@@ -67,5 +67,6 @@ def test_section_parsing(tmp_path):
 @pytest.mark.parametrize('lesson, section', SECTIONS, ids=[s.id for _, s in SECTIONS])
 def test_every_section_passes_unchanged(lesson, section):
     result = run_code(section.code, section.setup, section.wrap, lesson.path.parent,
-                      stdin='Ada', root=ROOT)
+                      stdin='Ada', root=ROOT, fixtures=section.fixtures,
+                      lesson_file=lesson.path)
     assert result.passed, f'{result.message}\n{result.details}\n{result.output}'
