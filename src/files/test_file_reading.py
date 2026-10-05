@@ -7,6 +7,11 @@ First, the file is located, opened to the first page, then reading/writing begin
 the end of the file.
 """
 
+import os
+
+# Build the file path relative to this lesson file so the test works from any working directory.
+MULTI_LINE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'multi_line_file.txt')
+
 
 def test_files_open():
     """Open files
@@ -42,24 +47,28 @@ def test_files_open():
     """
 
     # Open files without using 'with' statement.
-    file = open('src/files/multi_line_file.txt', 'r')
+    # pylint: disable=consider-using-with
+    file = open(MULTI_LINE_FILE, 'r', encoding='utf-8')
 
-    assert not file.closed
+    # Without 'with', a try-finally block makes sure the file gets closed even if
+    # something goes wrong while reading it.
+    try:
+        assert not file.closed
 
-    read_data = file.read()
+        read_data = file.read()
 
-    assert read_data == (
-        'first line\n'
-        'second line\n'
-        'third line'
-    )
-
-    file.close()
+        assert read_data == (
+            'first line\n'
+            'second line\n'
+            'third line'
+        )
+    finally:
+        file.close()
 
     assert file.closed
 
     # Open file using with.
-    with open('src/files/multi_line_file.txt', 'r') as file:
+    with open(MULTI_LINE_FILE, 'r', encoding='utf-8') as file:
         read_data = file.read()
 
         assert read_data == (
