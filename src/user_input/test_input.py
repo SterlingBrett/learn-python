@@ -30,3 +30,8 @@ def test_user_input(monkeypatch, capsys):
     user_input()
 
     assert capsys.readouterr().out == 'Welcome, Ada!\n'
+
+
+# Only ask for input when this file is run as a program (not when tests import it).
+if __name__ == "__main__":
+    user_input()
