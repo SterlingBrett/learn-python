@@ -94,8 +94,8 @@ def test_global_variable_access():
     """Testing global variable access from within a function"""
 
     # Global value of test_variable has been already changed by do_global() function in previous
-    # test so let's check that. Reading a global variable doesn't need the global statement; it is
-    # only required when the function assigns to the variable.
+    # test so let's check that. Reading a global variable doesn't need the 'global' keyword;
+    # it is only required when you want to assign a new value to it.
     assert test_variable == 'global value'
 
     # On this example you may see how accessing and changing global variables from within inner

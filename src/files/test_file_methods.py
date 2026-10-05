@@ -6,13 +6,25 @@ Reading from a file does not always have to be sequential. There are methods to 
 specific locations in the file, much like flipping to a page in a book.
 """
 
+import os
+
+# Build file paths relative to this lesson file so the test works from any working directory.
+FILES_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def test_file_methods():
     """Methods of File Objects"""
 
-    # pylint: disable=consider-using-with
-    multi_line_file = open('src/files/multi_line_file.txt', 'r', encoding='utf-8')
-    binary_file = open('src/files/binary_file', 'r', encoding='utf-8')
+    multi_line_path = os.path.join(FILES_DIR, 'multi_line_file.txt')
+    binary_path = os.path.join(FILES_DIR, 'binary_file')
+
+    with open(multi_line_path, 'r', encoding='utf-8') as multi_line_file, \
+            open(binary_path, 'r', encoding='utf-8') as binary_file:
+        check_file_methods(multi_line_file, binary_file)
+
+
+def check_file_methods(multi_line_file, binary_file):
+    """Explore read(), seek() and readline() on two already opened files"""
 
     # To read a file’s contents, call f.read(size), which reads some quantity of data and returns
     # it as a string (in text mode) or bytes object (in binary mode). size is an optional numeric
@@ -47,5 +59,4 @@ def test_file_methods():
     assert multi_line_file.readline() == 'third line'
     assert multi_line_file.readline() == ''
 
-    multi_line_file.close()
-    binary_file.close()
+    # Both files are closed automatically when the 'with' block in test_file_methods() ends.
