@@ -12,10 +12,24 @@ def user_input():
     """Input prompt"""
 
     # Printing statement to signal the user that we are waiting for input.
-    user_input = input("Please type in your name\n")
+    name = input("Please type in your name\n")
 
     # Printing a message based on the input.
-    print(f"Welcome, {user_input}!")
+    print(f"Welcome, {name}!")
+
+
+def test_user_input(monkeypatch, capsys):
+    """Test the input prompt without a real keyboard
+
+    pytest's monkeypatch fixture replaces the built-in input() with a function that returns a
+    prepared answer, and the capsys fixture captures everything printed to the screen.
+    """
+
+    monkeypatch.setattr('builtins.input', lambda prompt: 'Ada')
+
+    user_input()
+
+    assert capsys.readouterr().out == 'Welcome, Ada!\n'
 
 
 # Only ask for input when this file is run as a program (not when tests import it).

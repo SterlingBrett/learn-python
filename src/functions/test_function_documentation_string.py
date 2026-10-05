@@ -14,6 +14,8 @@ separating the summary from the rest of the description. The following lines sho
 paragraphs describing the object’s calling conventions, its side effects, etc.
 """
 
+import inspect
+
 
 def do_nothing():
     """Do nothing, but document it.
@@ -26,17 +28,19 @@ def do_nothing():
 def test_function_documentation_string():
     """Test documentation string."""
 
-    # The Python parser does not strip indentation from multi-line string literals in Python, so
-    # tools that process documentation have to strip indentation if desired. This is done using the
-    # following convention. The first non-blank line after the first line of the string determines
-    # the amount of indentation for the entire documentation string. (We can’t use the first line
-    # since it is generally adjacent to the string’s opening quotes so its indentation is not
-    # apparent in the string literal.) Whitespace “equivalent” to this indentation is then stripped
-    # from the start of all lines of the string. Lines that are indented less should not occur, but
-    # if they occur all their leading whitespace should be stripped. Equivalence of whitespace
-    # should be tested after expansion of tabs (to 8 spaces, normally).
+    # Tools that display documentation strip the indentation that comes from the source code. This
+    # is done using the following convention. The first non-blank line after the first line of the
+    # string determines the amount of indentation for the entire documentation string. (We can’t
+    # use the first line since it is generally adjacent to the string’s opening quotes so its
+    # indentation is not apparent in the string literal.) Whitespace “equivalent” to this
+    # indentation is then stripped from the start of all lines of the string.
+    #
+    # Since Python 3.13 the compiler already strips this indentation from __doc__. In older
+    # versions __doc__ keeps it. inspect.getdoc() returns the cleaned-up text in every version, so
+    # it is the reliable way to read a docstring.
 
-    assert do_nothing.__doc__ == """Do nothing, but document it.
-
-    No, really, it doesn't do anything.
-    """
+    assert inspect.getdoc(do_nothing) == (
+        'Do nothing, but document it.\n'
+        '\n'
+        "No, really, it doesn't do anything."
+    )

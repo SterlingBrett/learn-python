@@ -9,7 +9,7 @@
 
 <hr/>
 
-[![Build Status](https://travis-ci.org/trekhleb/learn-python.svg?branch=master)](https://travis-ci.org/trekhleb/learn-python)
+[![CI](https://github.com/SterlingBrett/learn-python/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/SterlingBrett/learn-python/actions/workflows/ci.yml)
 
 > This is a collection of Python scripts that are split by [topics](#table-of-contents) and contain 
 code examples with explanations, different use cases and links to further readings.
@@ -102,9 +102,11 @@ written correctly.
     - [Logical Operators](src/operators/test_logical.py) (`and`, `or`, `not`)
     - [Identity Operators](src/operators/test_identity.py) (`is`, `is not`)
     - [Membership Operators](src/operators/test_membership.py) (`in`, `not in`)
+    - [Assignment Expressions](src/operators/test_walrus.py) (`:=`, the walrus operator)
 3. **Data Types**
     - [Numbers](src/data_types/test_numbers.py) (including booleans)
     - [Strings](src/data_types/test_strings.py) and their methods
+    - [Formatted String Literals](src/data_types/test_f_strings.py) (f-strings)
     - [Lists](src/data_types/test_lists.py) and their methods (including list comprehensions)
     - [Tuples](src/data_types/test_tuples.py)
     - [Sets](src/data_types/test_sets.py) and their methods
@@ -117,6 +119,7 @@ written correctly.
     - [The `try` statements](src/control_flow/test_try.py)
     - [The `break` statement](src/control_flow/test_break.py)
     - [The `continue` statement](src/control_flow/test_continue.py)
+    - [The `match` statement](src/control_flow/test_match.py) (structural pattern matching)
 5. **Functions**
     - [Function Definition](src/functions/test_function_definition.py) (`def` and `return` statements)
     - [Scopes of Variables Inside Functions](src/functions/test_function_scopes.py) (`global` and `nonlocal` statements)
@@ -127,6 +130,7 @@ written correctly.
     - [Lambda Expressions](src/functions/test_lambda_expressions.py) (`lambda` statement)
     - [Documentation Strings](src/functions/test_function_documentation_string.py)
     - [Function Annotations](src/functions/test_function_annotations.py)
+    - [Type Hints](src/functions/test_type_hints.py) (`typing` module)
     - [Function Decorators](src/functions/test_function_decorators.py)
 6. **Classes**
     - [Class Definition](src/classes/test_class_definition.py) (`class` statement)
@@ -136,6 +140,7 @@ written correctly.
     - [Class and Instance Variables](src/classes/test_class_and_instance_variables.py)
     - [Inheritance](src/classes/test_inheritance.py)
     - [Multiple Inheritance](src/classes/test_multiple_inheritance.py)
+    - [Data Classes](src/classes/test_dataclasses.py) (`@dataclass` decorator)
 7. **Modules**
     - [Modules](src/modules/test_modules.py) (`import` statement)
     - [Packages](src/modules/test_packages.py)
@@ -156,13 +161,13 @@ written correctly.
     - [Dates and Times](src/standard_libraries/test_datetime.py) (`datetime` library)
     - [Data Compression](src/standard_libraries/test_zlib.py) (`zlib` library)
 12. **User input**
-    - [Terminal input](src/user_input/test_input.py) (`input` statement)
+    - [Terminal input](src/user_input/test_input.py) (`input()` function)
 
 ## Prerequisites
 
 **Installing Python**
 
-Make sure that you have [Python3 installed](https://realpython.com/installing-python/) on your machine.
+Make sure that you have [Python 3.10 or newer installed](https://realpython.com/installing-python/) on your machine.
 
 You might want to use [venv](https://docs.python.org/3/library/venv.html) standard Python library
 to create virtual environments and have Python, pip and all dependent packages to be installed and 
