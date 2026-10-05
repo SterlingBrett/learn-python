@@ -10,8 +10,9 @@ specific locations in the file, much like flipping to a page in a book.
 def test_file_methods():
     """Methods of File Objects"""
 
-    multi_line_file = open('src/files/multi_line_file.txt', 'r')
-    binary_file = open('src/files/binary_file', 'r')
+    # pylint: disable=consider-using-with
+    multi_line_file = open('src/files/multi_line_file.txt', 'r', encoding='utf-8')
+    binary_file = open('src/files/binary_file', 'r', encoding='utf-8')
 
     # To read a file’s contents, call f.read(size), which reads some quantity of data and returns
     # it as a string (in text mode) or bytes object (in binary mode). size is an optional numeric

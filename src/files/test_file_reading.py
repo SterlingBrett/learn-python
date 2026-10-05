@@ -42,7 +42,8 @@ def test_files_open():
     """
 
     # Open files without using 'with' statement.
-    file = open('src/files/multi_line_file.txt', 'r')
+    # pylint: disable=consider-using-with
+    file = open('src/files/multi_line_file.txt', 'r', encoding='utf-8')
 
     assert not file.closed
 
@@ -59,7 +60,7 @@ def test_files_open():
     assert file.closed
 
     # Open file using with.
-    with open('src/files/multi_line_file.txt', 'r') as file:
+    with open('src/files/multi_line_file.txt', 'r', encoding='utf-8') as file:
         read_data = file.read()
 
         assert read_data == (

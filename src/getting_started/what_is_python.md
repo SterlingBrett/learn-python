@@ -29,7 +29,7 @@ It is used for:
 
 ## Good to know
 
-- The most recent major version of Python is Python 3, which we shall be using in this tutorial. However, Python 2, although not being updated with anything other than security updates, is still quite popular.
+- This tutorial uses Python 3, the only supported major version of Python. Python 2 reached its end of life on January 1, 2020 and no longer receives any updates, so any Python 3.10 or newer release will work with every lesson here.
 - In this tutorial Python will be written in a text editor. It is possible to write Python in an Integrated Development Environment, such as Thonny, Pycharm, Netbeans or Eclipse which are particularly useful when managing larger collections of Python files.
 
 ## References
