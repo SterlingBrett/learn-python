@@ -65,3 +65,20 @@ def test_setup_code_is_available():
 def test_pytest_raises_works():
     code = 'import pytest\nwith pytest.raises(ZeroDivisionError):\n    1 / 0\n'
     assert run_code(code).passed
+
+
+def test_monkeypatch_and_capsys_fixtures():
+    code = (
+        "monkeypatch.setattr('builtins.input', lambda prompt: 'Ada')\n"
+        "print('Hi', input('name? '))\n"
+        "assert capsys.readouterr().out == 'Hi Ada\\n'\n"
+    )
+    result = run_code(code, fixtures=('monkeypatch', 'capsys'))
+    assert result.passed, result.message
+    assert result.output == 'Hi Ada\n'
+
+
+def test_unknown_fixture_is_explained():
+    result = run_code('assert tmp_path\n', fixtures=('tmp_path',))
+    assert result.status == 'error'
+    assert 'tmp_path' in result.message

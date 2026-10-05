@@ -441,6 +441,8 @@ class CourseApp:
                     lesson_dir=stop.lesson.path.parent,
                     stdin=stdin,
                     root=REPO_ROOT,
+                    fixtures=section.fixtures if section else (),
+                    lesson_file=stop.lesson.path,
                 )
             except Exception as error:  # pylint: disable=broad-except
                 result = RunResult('error', f'The course could not run your code: {error}')

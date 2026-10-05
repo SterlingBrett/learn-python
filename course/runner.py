@@ -11,6 +11,7 @@ changing any line numbers.
 """
 
 import ast
+import importlib
 import json
 import linecache
 import os
@@ -45,7 +46,7 @@ class RunResult:
 
 
 def run_code(code, setup='', wrap=True, lesson_dir=None, stdin='',
-             timeout=DEFAULT_TIMEOUT, root=REPO_ROOT):
+             timeout=DEFAULT_TIMEOUT, root=REPO_ROOT, fixtures=(), lesson_file=None):
     """Run learner code in a child Python process and return a RunResult."""
     with tempfile.TemporaryDirectory(prefix='learn-python-') as tmp:
         payload_path = Path(tmp) / 'payload.json'
@@ -55,6 +56,8 @@ def run_code(code, setup='', wrap=True, lesson_dir=None, stdin='',
             'setup': setup,
             'wrap': wrap,
             'lesson_dir': str(lesson_dir) if lesson_dir else '',
+            'fixtures': list(fixtures),
+            'lesson_file': str(lesson_file) if lesson_file else '',
         }), encoding='utf-8')
 
         env = dict(os.environ)
@@ -147,6 +150,84 @@ def _install_pytest_fallback():
     sys.modules['pytest'] = module
 
 
+class _MonkeyPatch:
+    """A small stand-in for pytest's monkeypatch fixture."""
+
+    def __init__(self):
+        self._undo = []
+
+    def setattr(self, target, name, value=None):
+        """Replace an attribute; ``target`` may be an object or a 'module.attr' string."""
+        if isinstance(target, str):
+            module_name, _, attribute = target.rpartition('.')
+            value = name
+            target, name = importlib.import_module(module_name), attribute
+        self._undo.append((target, name, getattr(target, name)))
+        setattr(target, name, value)
+
+    def undo(self):
+        """Put every replaced attribute back."""
+        while self._undo:
+            target, name, value = self._undo.pop()
+            setattr(target, name, value)
+
+
+class _CaptureResult(tuple):
+    """(out, err) with attribute access, like pytest's CaptureResult."""
+
+    @property
+    def out(self):
+        """Captured standard output."""
+        return self[0]
+
+    @property
+    def err(self):
+        """Captured standard error."""
+        return self[1]
+
+
+class _Tee:
+    """Writes to the real stream (so the learner sees it) and remembers the text."""
+
+    def __init__(self, stream):
+        self.stream = stream
+        self.captured = []
+
+    def write(self, text):
+        """Write text to both places."""
+        self.captured.append(text)
+        return self.stream.write(text)
+
+    def flush(self):
+        """Flush the real stream."""
+        self.stream.flush()
+
+    def take(self):
+        """Return and forget what was captured so far."""
+        text = ''.join(self.captured)
+        self.captured.clear()
+        return text
+
+
+class _CapSys:
+    """A small stand-in for pytest's capsys fixture that still shows the output."""
+
+    def __init__(self):
+        self._saved = (sys.stdout, sys.stderr)
+        sys.stdout, sys.stderr = _Tee(sys.stdout), _Tee(sys.stderr)
+
+    def readouterr(self):
+        """Return what was printed since the last call."""
+        return _CaptureResult((sys.stdout.take(), sys.stderr.take()))
+
+    def undo(self):
+        """Stop capturing."""
+        sys.stdout, sys.stderr = self._saved
+
+
+FIXTURES = {'monkeypatch': _MonkeyPatch, 'capsys': _CapSys}
+
+
 def _remember_source(filename, text):
     """Let tracebacks show the learner's lines even though they are not in a file."""
     lines = text.splitlines(keepends=True)
@@ -205,6 +286,11 @@ def _walk_tb(tb):
         tb = tb.tb_next
 
 
+def _undo_fixtures(fixtures):
+    for fixture in reversed(fixtures):
+        fixture.undo()
+
+
 def _child_main(payload_path, result_path):
     payload = json.loads(Path(payload_path).read_text(encoding='utf-8'))
     code = payload['code']
@@ -239,15 +325,28 @@ def _child_main(payload_path, result_path):
         return
 
     namespace = {'__name__': '__main__', '__builtins__': __builtins__}
+    if payload.get('lesson_file'):
+        # Lessons may build paths next to their own file.
+        namespace['__file__'] = payload['lesson_file']
+    unknown = [name for name in payload.get('fixtures', []) if name not in FIXTURES]
+    if unknown:
+        finish('error', f'This section needs a pytest fixture the course cannot provide: '
+                        f'{", ".join(unknown)}. Run it with pytest instead.')
+        return
+    fixtures = [FIXTURES[name]() for name in payload.get('fixtures', [])]
+    namespace.update(zip(payload.get('fixtures', []), fixtures))
     try:
         if setup.strip():
             exec(compile(setup, SETUP_FILE, 'exec'), namespace)  # pylint: disable=exec-used
         exec(program, namespace)  # pylint: disable=exec-used
         if payload['wrap']:
             namespace['__lesson__']()
+        _undo_fixtures(fixtures)
     except SystemExit:
+        _undo_fixtures(fixtures)
         pass
     except BaseException as error:  # pylint: disable=broad-except
+        _undo_fixtures(fixtures)
         if isinstance(error, EOFError):
             finish('error', 'Your code asked for input but none was given.', 0,
                    'Type what your program should read into the "Program input" box, '
