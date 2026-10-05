@@ -29,6 +29,27 @@ without launching them.
 
 > _You might also be interested in 🤖 [Interactive Machine Learning Experiments](https://github.com/trekhleb/machine-learning-experiments)_
 
+## Learn with the Desktop App
+
+This repository also comes with a simple desktop course built from the same lessons. It shows
+the topics in a sidebar, explains each idea, and lets you edit and run the code. The `assert`
+lines are checks: press **Run** and the app tells you whether they all pass, highlighting the
+line of any check that fails. Your progress and edits are saved automatically.
+
+Start it from the project root folder (Python 3.8 or newer with Tkinter, no other packages
+needed):
+
+```bash
+python -m course
+```
+
+Use **Previous** and **Next** (or `Alt+Left` / `Alt+Right`) to go through the course in order,
+`Ctrl+Enter` or `F5` to run your code, and `Ctrl++` / `Ctrl+-` to change the text size.
+
+If you see a message that Tkinter is missing, install it with `sudo apt install python3-tk`
+on Ubuntu or Debian, or use the Python installer from [python.org](https://www.python.org/downloads/)
+on Windows and macOS.
+
 ## How to Use This Repository
 
 Each Python script in this repository has the following structure:

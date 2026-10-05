@@ -93,10 +93,17 @@ def test_function_scopes():
 def test_global_variable_access():
     """Testing global variable access from within a function"""
 
-    # Global value of test_variable has been already changed by do_global() function in previous
-    # test so let's check that.
-    # pylint: disable=global-statement
-    global test_variable
+    def change_global_variable():
+        # Somewhere else in the program, a function changes the global variable,
+        # just like do_global() did in the previous example.
+        # pylint: disable=global-statement
+        global test_variable
+        test_variable = 'global value'
+
+    change_global_variable()
+
+    # The global value of test_variable has been changed by change_global_variable(),
+    # so let's check that.
     assert test_variable == 'global value'
 
     # On this example you may see how accessing and changing global variables from within inner
