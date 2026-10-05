@@ -1,6 +1,6 @@
 # Playground e Cheatsheet Para Aprender Python
 
-[![Build Status](https://travis-ci.org/trekhleb/learn-python.svg?branch=master)](https://travis-ci.org/trekhleb/learn-python)
+[![CI](https://github.com/SterlingBrett/learn-python/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/SterlingBrett/learn-python/actions/workflows/ci.yml)
 
 > Essa é uma coleção de scripts Python dividida em [tópicos](#índice) que contém 
 exemplos de código com explicações, diferentes usos e links para outras leituras.

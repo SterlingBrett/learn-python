@@ -9,7 +9,7 @@
 
 <hr/>
 
-[![Build Status](https://travis-ci.org/trekhleb/learn-python.svg?branch=master)](https://travis-ci.org/trekhleb/learn-python)
+[![CI](https://github.com/SterlingBrett/learn-python/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/SterlingBrett/learn-python/actions/workflows/ci.yml)
 
 > Це колекція скриптів мовою Python, розподілених за [темами](#зміст), що містять приклади коду з поясненнями, різними варіантами використання та посиланнями на додаткові матеріали.
 
